@@ -16,10 +16,20 @@ public class JPlagComparison implements Comparator<JPlagComparison> { // FIXME T
 
     private final List<Match> matches;
 
+    private boolean suspicious = false;
+
     public JPlagComparison(Submission firstSubmission, Submission secondSubmission) {
         this.firstSubmission = firstSubmission;
         this.secondSubmission = secondSubmission;
         matches = new ArrayList<>();
+    }
+
+    public boolean isSuspicious() {
+        return suspicious;
+    }
+
+    public void setSuspicious(boolean suspicious) {
+        this.suspicious = suspicious;
     }
 
     /**
