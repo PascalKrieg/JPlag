@@ -58,6 +58,11 @@ public class JPlagComparison implements Comparator<JPlagComparison> { // FIXME T
         return (compare(this, (JPlagComparison) other) == 0);
     }
 
+    public boolean equalSubmissions(JPlagComparison other) {
+        return this.getFirstSubmission().equals(other.getFirstSubmission()) && this.getSecondSubmission().equals(other.getSecondSubmission())
+                || this.getFirstSubmission().equals(other.getSecondSubmission()) && this.getSecondSubmission().equals(other.getFirstSubmission());
+    }
+
     /**
      * @return the base code matches of the first submission.
      */
