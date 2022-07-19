@@ -31,6 +31,7 @@ public class SubmissionSet {
     private final ErrorCollector errorCollector;
     private final JPlagOptions options;
     private int errors = 0;
+    private int tooShort = 0;
     private String currentSubmissionName;
 
     /**
@@ -142,31 +143,14 @@ public class SubmissionSet {
 
         long startTime = System.currentTimeMillis();
 
-        int tooShort = 0;
+        errorCollector.print("Beginning parsing:", null);
+
+        int counter = 1;
         for (Submission submission : submissions) {
-            boolean ok;
-
-            errorCollector.print(null, "------ Parsing submission: " + submission.getName());
-            currentSubmissionName = submission.getName();
-            errorCollector.setCurrentSubmissionName(currentSubmissionName);
-
-            if (!(ok = submission.parse(options.isDebugParser()))) {
-                errors++;
-            }
-
-            if (submission.getTokenList() != null && submission.getNumberOfTokens() < options.getMinimumTokenMatch()) {
-                errorCollector.addError("Submission contains fewer tokens than minimum match length allows!");
-                submission.setTokenList(null);
-                tooShort++;
-                ok = false;
-                submission.markAsErroneous();
-            }
-
-            if (ok) {
-                errorCollector.print(null, "OK");
-            } else {
-                errorCollector.print(null, "ERROR -> Submission removed");
-            }
+            printProgress(counter, submissions.size(), 10);
+            // can't be parallelized at the moment, because the Language class implementations and usage are not thread safe
+            parseSubmission(submission);
+            counter++;
         }
 
         int validSubmissions = submissions.size() - errors - tooShort;
@@ -175,6 +159,41 @@ public class SubmissionSet {
         errorCollector.print(tooShort + " too short submission" + (tooShort != 1 ? "s!" : "!") + "", null);
         printDetails(submissions, startTime, tooShort);
         errorCollector.print("", null); // new line
+    }
+
+    private void printProgress(int currentSubmission, int totalSubmissions, int milestoneInterval) {
+        var roundedPercentage = Math.floorDiv(100 * currentSubmission, totalSubmissions);
+        var lastRoundedPercentage = Math.floorDiv(100 * (currentSubmission - 1), totalSubmissions);
+
+        if (roundedPercentage % milestoneInterval == 0 && roundedPercentage != lastRoundedPercentage) {
+            errorCollector.print(String.format("%-3d%%", roundedPercentage), null);
+        }
+    }
+
+    private void parseSubmission(Submission submission) {
+        boolean ok;
+
+        errorCollector.print(null, "------ Parsing submission: " + submission.getName());
+        currentSubmissionName = submission.getName();
+        errorCollector.setCurrentSubmissionName(currentSubmissionName);
+
+        if (!(ok = submission.parse(options.isDebugParser()))) {
+            errors++;
+        }
+
+        if (submission.getTokenList() != null && submission.getNumberOfTokens() < options.getMinimumTokenMatch()) {
+            errorCollector.addError("Submission contains fewer tokens than minimum match length allows!");
+            submission.setTokenList(null);
+            tooShort++;
+            ok = false;
+            submission.markAsErroneous();
+        }
+
+        if (ok) {
+            errorCollector.print(null, "OK");
+        } else {
+            errorCollector.print(null, "ERROR -> Submission removed");
+        }
     }
 
     private void printDetails(List<Submission> submissions, long startTime, int tooShort) {
