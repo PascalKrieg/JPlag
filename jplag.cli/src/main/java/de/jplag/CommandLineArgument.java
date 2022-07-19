@@ -38,6 +38,11 @@ public enum CommandLineArgument {
     BASE_CODE("-bc", String.class),
     VERBOSITY(new Builder("-v", String.class).defaultsTo("quiet").choices(List.of("quiet", "long"))), // TODO SH: Replace verbosity when integrating a
                                                                                                       // real logging library
+    SIMPLE_FILTERING("-simple-filter", Boolean.class),
+    SOURCE_CODE_ANALYSIS("-source-analysis", Boolean.class),
+    GENERIC_TOKEN_FILTERING("-generic-filter", Boolean.class),
+    COMPILED_DUAL_COMPARISON("-compile", Boolean.class),
+
     DEBUG("-d", Boolean.class),
     SUBDIRECTORY("-S", String.class),
     SUFFIXES("-p", String.class),
