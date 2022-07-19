@@ -1,6 +1,7 @@
 package de.jplag.cpp;
 
 import java.io.File;
+import java.util.LinkedList;
 
 import de.jplag.AbstractParser;
 import de.jplag.ErrorConsumer;
@@ -10,6 +11,7 @@ import de.jplag.TokenList;
 public class Scanner extends AbstractParser {
     private String currentFile;
 
+    private LinkedList<CPPToken> tokenList;
     private final FrontendOptions options;
 
     /**
@@ -32,7 +34,8 @@ public class Scanner extends AbstractParser {
     }
 
     public TokenList scan(File directory, String[] files) {
-        tokens = new TokenList();
+        tokenList = new LinkedList<>();
+
         errors = 0;
         for (String currentFile : files) {
             this.currentFile = currentFile;
@@ -40,13 +43,23 @@ public class Scanner extends AbstractParser {
             if (!CPPScanner.scanFile(directory, currentFile, this)) {
                 errors++;
             }
-            tokens.addToken(new CPPToken(CPPTokenConstants.FILE_END, currentFile));
+            tokenList.add(new CPPToken(CPPTokenConstants.FILE_END, currentFile));
         }
+
+        if (options.useBasicFiltering()) {
+            BasicTokenFilter.applyTo(tokenList);
+        }
+
+        var tokens = new TokenList();
+        for (CPPToken cppToken : tokenList) {
+            tokens.addToken(cppToken);
+        }
+
         return tokens;
     }
 
     public void add(int type, Token token) {
         int length = token.endColumn - token.beginColumn + 1;
-        tokens.addToken(new CPPToken(type, currentFile, token.beginLine, token.beginColumn, length));
+        tokenList.add(new CPPToken(type, currentFile, token.beginLine, token.beginColumn, length));
     }
 }

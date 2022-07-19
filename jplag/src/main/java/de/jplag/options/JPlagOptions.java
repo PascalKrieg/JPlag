@@ -279,6 +279,11 @@ public class JPlagOptions {
     public FrontendOptions getFrontendOptions() {
         return frontendOptions;
     }
+
+    public void setBasicFiltering(Boolean value) {
+        this.frontendOptions.setUseBasicFiltering(value);
+    }
+
     /**
      * After the selected language has been initialized, this method is called by JPlag to set default values for options
      * not set by the user.
