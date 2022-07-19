@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import de.jplag.FrontendOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,7 @@ public class JPlagOptions {
         this.secondaryMTMThreshold = secondaryMTMThreshold;
     }
 
+    private final FrontendOptions frontendOptions;
     /**
      * Name of the file that contains the names of files to exclude from comparison.
      */
@@ -167,6 +169,7 @@ public class JPlagOptions {
         this.submissionDirectories = submissionDirectories;
         this.oldSubmissionDirectories = oldSubmissionDirectories;
         this.languageOption = languageOption;
+        this.frontendOptions = new FrontendOptions();
     }
 
     public Optional<String> getBaseCodeSubmissionName() {
@@ -273,6 +276,9 @@ public class JPlagOptions {
         this.language = language;
     }
 
+    public FrontendOptions getFrontendOptions() {
+        return frontendOptions;
+    }
     /**
      * After the selected language has been initialized, this method is called by JPlag to set default values for options
      * not set by the user.

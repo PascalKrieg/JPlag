@@ -4,12 +4,13 @@ import java.io.File;
 
 import de.jplag.AbstractParser;
 import de.jplag.ErrorConsumer;
+import de.jplag.FrontendOptions;
 import de.jplag.TokenList;
 
 public class Scanner extends AbstractParser {
     private String currentFile;
 
-    private TokenList tokens;
+    private final FrontendOptions options;
 
     /**
      * Creates the parser.
@@ -17,6 +18,17 @@ public class Scanner extends AbstractParser {
      */
     public Scanner(ErrorConsumer errorConsumer) {
         super(errorConsumer);
+        this.options = new FrontendOptions();
+    }
+
+    /**
+     * Creates the parser.
+     * @param errorConsumer is the consumer for any occurring errors.
+     * @param options optional {@link FrontendOptions} object containing options for additional steps that might improve plagiarism detection
+     */
+    public Scanner(ErrorConsumer errorConsumer, FrontendOptions options) {
+        super(errorConsumer);
+        this.options = options;
     }
 
     public TokenList scan(File directory, String[] files) {

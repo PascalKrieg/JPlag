@@ -3,6 +3,7 @@ package de.jplag.cpp;
 import java.io.File;
 
 import de.jplag.ErrorConsumer;
+import de.jplag.FrontendOptions;
 import de.jplag.TokenList;
 
 public class Language implements de.jplag.Language {
@@ -10,6 +11,11 @@ public class Language implements de.jplag.Language {
 
     public Language(ErrorConsumer errorConsumer) {
         scanner = new Scanner(errorConsumer);
+    }
+
+    public Language(ErrorConsumer errorConsumer, FrontendOptions options) {
+        options.setDualComparisonStrategy(new CLangDualComparison());
+        scanner = new Scanner(errorConsumer, options);
     }
 
     @Override

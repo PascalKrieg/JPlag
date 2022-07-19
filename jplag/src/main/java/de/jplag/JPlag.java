@@ -163,8 +163,18 @@ public class JPlag {
         LanguageOption languageOption = this.options.getLanguageOption();
 
         try {
-            Constructor<?> constructor = Class.forName(languageOption.getClassPath()).getConstructor(ErrorConsumer.class);
-            Object[] constructorParams = {errorCollector};
+            Constructor<?> constructor;
+            Object[] constructorParams;
+            try {
+                constructor = Class.forName(languageOption.getClassPath()).getConstructor(ErrorConsumer.class, FrontendOptions.class);
+                constructorParams = new Object[]{errorCollector, this.options.getFrontendOptions()};
+                logger.info("got constructor with FrontendOptions");
+            } catch (NoSuchMethodException e) {
+                // Language frontend does not accept FrontendOptions
+                constructor = Class.forName(languageOption.getClassPath()).getConstructor(ErrorConsumer.class);
+                constructorParams = new Object[]{errorCollector};
+                logger.info("got constructor without FrontendOptions");
+            }
 
             Language language = (Language) constructor.newInstance(constructorParams);
 
