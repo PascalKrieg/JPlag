@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import de.jplag.FrontendOptions;
+import de.jplag.experimental.ExperimentalOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +106,11 @@ public class JPlagOptions {
     }
 
     private final FrontendOptions frontendOptions;
+
+    private final ExperimentalOptions experimentalOptions;
+
+    private boolean useGenericTokenFiltering = false;
+
     /**
      * Name of the file that contains the names of files to exclude from comparison.
      */
@@ -170,6 +176,7 @@ public class JPlagOptions {
         this.oldSubmissionDirectories = oldSubmissionDirectories;
         this.languageOption = languageOption;
         this.frontendOptions = new FrontendOptions();
+        this.experimentalOptions = new ExperimentalOptions();
     }
 
     public Optional<String> getBaseCodeSubmissionName() {
@@ -276,6 +283,7 @@ public class JPlagOptions {
         this.language = language;
     }
 
+
     public FrontendOptions getFrontendOptions() {
         return frontendOptions;
     }
@@ -290,6 +298,35 @@ public class JPlagOptions {
 
     public void setDualComparison(Boolean value) {
         this.frontendOptions.setUseDualComparison(value);
+    }
+
+
+    public boolean useGenericFiltering() {
+        return useGenericTokenFiltering;
+    }
+
+    public void setUseGenericTokenFiltering(Boolean useGenericTokenFiltering) {
+        this.useGenericTokenFiltering = useGenericTokenFiltering;
+    }
+
+    public void setGenericWindowLength(Integer value) {
+        experimentalOptions.setGenericWindowLength(value);
+    }
+
+    private void setGenericMaxInsertionLength(Integer value) {
+        experimentalOptions.setGenericMaxInsertionLength(value);
+    }
+
+    private void setGenericMaxIterations(Integer value) {
+        experimentalOptions.setGenericMaxIterations(value);
+    }
+
+    private void genericWindowIncrement(Integer value) {
+        experimentalOptions.setGenericWindowIncrement(value);
+    }
+
+    public ExperimentalOptions getExperimentalOptions() {
+        return experimentalOptions;
     }
 
     /**

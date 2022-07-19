@@ -6,6 +6,7 @@ import static de.jplag.TokenConstants.SEPARATOR_TOKEN;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jplag.experimental.GenericTokenFilter;
 import de.jplag.options.JPlagOptions;
 
 /**
@@ -126,6 +127,14 @@ public class GreedyStringTiling {
         // first and second refer to the list of tokens of the first and second submission:
         TokenList first = firstSubmission.getTokenList();
         TokenList second = secondSubmission.getTokenList();
+
+        if (options.useGenericFiltering()) {
+            GenericTokenFilter tokenFilter = new GenericTokenFilter(first, second, options.getExperimentalOptions());
+            tokenFilter.filter();
+
+            first = tokenFilter.getFirst();
+            second = tokenFilter.getSecond();
+        }
 
         // Initialize:
         JPlagComparison comparison = new JPlagComparison(firstSubmission, secondSubmission);
