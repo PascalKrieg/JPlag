@@ -102,6 +102,19 @@ public class JPlag {
 
         result.setClusteringResult(ClusteringFactory.getClusterings(result.getComparisons(), options.getClusteringOptions()));
 
+        if (options.getFrontendOptions().useDualComparison()) {
+            var dualComparison = options.getFrontendOptions().getDualComparisonStrategy();
+
+            var successful = dualComparison.runComparison(options.getSubmissionDirectories());
+
+            if (successful) {
+                result.getComparisons().forEach(jPlagComparison -> {
+                    var firstSubmissionName = jPlagComparison.getFirstSubmission().getName();
+                    var secondSubmissionName = jPlagComparison.getSecondSubmission().getName();
+                    jPlagComparison.setSuspicious(dualComparison.isPairSuspicious(firstSubmissionName, secondSubmissionName));
+                });
+            }
+        }
         return result;
     }
 

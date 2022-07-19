@@ -288,6 +288,10 @@ public class JPlagOptions {
         this.frontendOptions.setUseSourceAnalysis(value);
     }
 
+    public void setDualComparison(Boolean value) {
+        this.frontendOptions.setUseDualComparison(value);
+    }
+
     /**
      * After the selected language has been initialized, this method is called by JPlag to set default values for options
      * not set by the user.

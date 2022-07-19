@@ -7,6 +7,9 @@ public class FrontendOptions {
     private boolean useBasicFiltering = false;
     private boolean useSourceAnalysis = false;
 
+    private boolean useDualComparison = false;
+    private DualComparisonStrategy dualComparisonStrategy;
+
     public boolean useBasicFiltering() {
         return useBasicFiltering;
     }
@@ -22,5 +25,22 @@ public class FrontendOptions {
 
     public void setUseSourceAnalysis(boolean useSourceAnalysis) {
         this.useSourceAnalysis = useSourceAnalysis;
+    }
+
+
+    public boolean useDualComparison() {
+        return useDualComparison;
+    }
+
+    public void setUseDualComparison(boolean useDualComparison) {
+        this.useDualComparison = useDualComparison;
+    }
+
+    public DualComparisonStrategy getDualComparisonStrategy() {
+        return dualComparisonStrategy;
+    }
+
+    public void setDualComparisonStrategy(DualComparisonStrategy dualComparisonStrategy) {
+        this.dualComparisonStrategy = dualComparisonStrategy;
     }
 }
