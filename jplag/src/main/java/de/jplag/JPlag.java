@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,8 +79,6 @@ public class JPlag {
      * @throws ExitException if the JPlag exits preemptively.
      */
     public JPlagResult run() throws ExitException {
-        if (options.useSecondaryMTM())
-            return runSecondMTM();
 
         // Parse and validate submissions.
         SubmissionSetBuilder builder = new SubmissionSetBuilder(language, options, errorCollector, excludedFileNames);
@@ -116,53 +113,6 @@ public class JPlag {
             }
         }
         return result;
-    }
-
-    private JPlagResult runSecondMTM() throws ExitException {
-        var oldSecondaryMTM = options.getSecondaryMinimumTokenMatch();
-        options.setSecondaryMinimumTokenMatch(null);
-        var oldMinimumTokenMatch = options.getMinimumTokenMatch();
-
-        var initialResult = run();
-
-
-        options.setMinimumTokenMatch(4);
-        var secondaryResult = run();
-
-        options.setMinimumTokenMatch(oldMinimumTokenMatch);
-        options.setSecondaryMinimumTokenMatch(oldSecondaryMTM);
-
-        var timeBeforeOptimization = System.currentTimeMillis();
-
-        var initialComparisons = initialResult.getComparisons();
-        var secondaryComparisons = secondaryResult.getComparisons();
-
-        var secondarySimilarities = new HashMap<String, Float>();
-
-        secondaryComparisons.forEach(secondaryComparison -> {
-            var combinedNames = secondaryComparison.getFirstSubmission().getName() + secondaryComparison.getSecondSubmission().getName();
-            secondarySimilarities.put(combinedNames, secondaryComparison.maximalSimilarity());
-        });
-
-        // Very slow implementation TODO optimize
-        initialComparisons.forEach(initialComparison -> {
-            var combinedNames = initialComparison.getFirstSubmission().getName() + initialComparison.getSecondSubmission().getName();
-
-            if (secondarySimilarities.containsKey(combinedNames) == false)
-                return;
-
-            var similarityDifference = secondarySimilarities.get(combinedNames) - initialComparison.maximalSimilarity();
-
-            if (similarityDifference > options.getSecondaryMTMThreshold())
-                initialComparison.setSuspicious(true);
-        });
-
-
-
-        var submissionSet = initialResult.getSubmissions();
-        var duration = initialResult.getDuration() + secondaryResult.getDuration() + (System.currentTimeMillis() - timeBeforeOptimization);
-
-        return new JPlagResult(initialComparisons, submissionSet, duration, options);
     }
 
     private ComparisonStrategy initializeComparisonStrategy(final ComparisonMode comparisonMode) {

@@ -76,34 +76,6 @@ public class JPlagOptions {
      */
     private Integer minimumTokenMatch;
 
-    /**
-     * A second value for minimum token match.
-     * If set, JPlag will be run a second time using this secondary minimum token match.
-     * The results are then compared to find high discrepancies. This can indicate a code insertion obfuscation attack.
-     */
-    private Integer secondaryMinimumTokenMatch;
-
-    public boolean useSecondaryMTM() {
-        return secondaryMinimumTokenMatch != null;
-    }
-
-    public Integer getSecondaryMinimumTokenMatch() {
-        return secondaryMinimumTokenMatch;
-    }
-
-    public void setSecondaryMinimumTokenMatch(Integer secondaryMinimumTokenMatch) {
-        this.secondaryMinimumTokenMatch = secondaryMinimumTokenMatch;
-    }
-
-    private float secondaryMTMThreshold;
-
-    public float getSecondaryMTMThreshold() {
-        return secondaryMTMThreshold;
-    }
-
-    public void setSecondaryMTMThreshold(Float secondaryMTMThreshold) {
-        this.secondaryMTMThreshold = secondaryMTMThreshold;
-    }
 
     private final FrontendOptions frontendOptions;
 
