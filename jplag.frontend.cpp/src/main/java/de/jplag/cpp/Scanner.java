@@ -12,6 +12,8 @@ public class Scanner extends AbstractParser {
     private String currentFile;
 
     private LinkedList<CPPToken> tokenList;
+    private final SourceAnalysis sourceAnalysis;
+
     private final FrontendOptions options;
 
     /**
@@ -20,6 +22,7 @@ public class Scanner extends AbstractParser {
      */
     public Scanner(ErrorConsumer errorConsumer) {
         super(errorConsumer);
+        sourceAnalysis = new SourceAnalysis();
         this.options = new FrontendOptions();
     }
 
@@ -30,11 +33,16 @@ public class Scanner extends AbstractParser {
      */
     public Scanner(ErrorConsumer errorConsumer, FrontendOptions options) {
         super(errorConsumer);
+        sourceAnalysis = new SourceAnalysis();
         this.options = options;
     }
 
     public TokenList scan(File directory, String[] files) {
         tokenList = new LinkedList<>();
+
+        if (options.useSourceAnalysis()) {
+            sourceAnalysis.findUnusedVariableLines(directory, files);
+        }
 
         errors = 0;
         for (String currentFile : files) {
@@ -60,6 +68,11 @@ public class Scanner extends AbstractParser {
 
     public void add(int type, Token token) {
         int length = token.endColumn - token.beginColumn + 1;
+
+        if (options.useSourceAnalysis() && sourceAnalysis.isTokenIgnored(token, currentFile)) {
+            return;
+        }
+
         tokenList.add(new CPPToken(type, currentFile, token.beginLine, token.beginColumn, length));
     }
 }

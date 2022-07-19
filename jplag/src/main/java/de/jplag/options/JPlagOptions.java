@@ -284,6 +284,10 @@ public class JPlagOptions {
         this.frontendOptions.setUseBasicFiltering(value);
     }
 
+    public void setSourceAnalysis(Boolean value) {
+        this.frontendOptions.setUseSourceAnalysis(value);
+    }
+
     /**
      * After the selected language has been initialized, this method is called by JPlag to set default values for options
      * not set by the user.
