@@ -5,6 +5,7 @@ public class ExperimentalOptions {
     private int genericMaxInsertionLength = 3;
     private int genericMaxIterations = 1;
     private int genericWindowIncrement = 4;
+    private int genericWindowPadding = 3;
 
     public ExperimentalOptions() {
 
@@ -50,5 +51,14 @@ public class ExperimentalOptions {
 
     public void setGenericWindowIncrement(int genericWindowIncrement) {
         this.genericWindowIncrement = genericWindowIncrement;
+    }
+
+
+    public int getGenericWindowPadding() {
+        return genericWindowPadding;
+    }
+
+    public void setGenericWindowPadding(int genericWindowPadding) {
+        this.genericWindowPadding = genericWindowPadding;
     }
 }

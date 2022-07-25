@@ -102,7 +102,7 @@ public class GenericTokenFilter {
             // A b a C D E
             //     A C D E
             // where lower case letters represent deleted tokens
-            if (i < options.getGenericMaxInsertionLength() || i > options.getGenericWindowLength() - options.getGenericMaxInsertionLength()) {
+            if (i < options.getGenericWindowPadding() || i > options.getGenericWindowLength() - options.getGenericWindowPadding()) {
                 return;
             }
 
@@ -120,7 +120,7 @@ public class GenericTokenFilter {
 
                 i++;
 
-                if (i > options.getGenericWindowLength()) {
+                if (i > options.getGenericWindowLength() - options.getGenericWindowPadding()) {
                     return;
                 }
 
