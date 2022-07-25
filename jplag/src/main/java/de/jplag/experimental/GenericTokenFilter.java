@@ -52,16 +52,8 @@ public class GenericTokenFilter {
 
 
         for (int iteration = 0; iteration < options.getGenericMaxIterations(); iteration++) {
-            for (int i = 0; i < firstTokenList.size() - options.getGenericWindowLength() - options.getGenericMaxInsertionLength(); i += options.getGenericWindowIncrement()) {
-                for (int j = 0; j < secondTokenList.size() - options.getGenericWindowLength(); j++) {
-                    filterWindow(firstTokenList, i, secondTokenList, j);
-                }
-            }
-            for (int i = 0; i < secondTokenList.size() - options.getGenericWindowLength() - options.getGenericMaxInsertionLength(); i += options.getGenericWindowIncrement()) {
-                for (int j = 0; j < firstTokenList.size() - options.getGenericWindowLength(); j++) {
-                    filterWindow(secondTokenList, i, firstTokenList, j);
-                }
-            }
+            runWindows(firstTokenList, secondTokenList);
+            runWindows(secondTokenList, firstTokenList);
         }
 
         first = new TokenList();
@@ -69,6 +61,16 @@ public class GenericTokenFilter {
 
         second = new TokenList();
         secondTokenList.forEach(second::addToken);
+    }
+
+    private void runWindows(ArrayList<Token> firstTokenList, ArrayList<Token> secondTokenList) {
+        for (int i = 0;
+             i < firstTokenList.size() - options.getGenericWindowLength() - options.getGenericMaxInsertionLength();
+             i += options.getGenericWindowIncrement()) {
+            for (int j = 0; j < secondTokenList.size() - options.getGenericWindowLength(); j++) {
+                filterWindow(firstTokenList, i, secondTokenList, j);
+            }
+        }
     }
 
 
