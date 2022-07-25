@@ -12,79 +12,66 @@ import org.junit.jupiter.api.Test;
 
 public class GenericTokenFilterTest extends TestBase {
 
-    private final ExperimentalOptions options = new ExperimentalOptions(8, 3, 1, 4);
+    private final ExperimentalOptions options = new ExperimentalOptions(14, 3, 1, 2);
 
-    @Disabled
     @Test
-    void testSingleInsertion() {
-        var first = new TokenList();
-        var second = new TokenList();
-
-        setupSingleInsertionTokenList(first, second);
-
-        var filter = new GenericTokenFilter(first, second, options);
-        filter.filter();
-
-        first = filter.getFirst();
-        second = filter.getSecond();
-        assertIterableEquals(first.allTokens(), second.allTokens());
-    }
-
-    private void setupSingleInsertionTokenList(TokenList first, TokenList second){
-        int[] firstTypeSequence = {
+    void testSingleInsertionFirstWindow() {
+        var first = buildTokenList(new int[]{
                 1,4,8,2,6,
                 5,
-                2,1,9,3,5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7
-        };
-        int[] secondTypeSequence = {
+                2,1,9,3,5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7});
+        var second = buildTokenList(new int[]{
                 1,4,8,2,6,
                 2,1,9,3,5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7
-        };
+        });
 
-        for (int type : firstTypeSequence) {
-            first.addToken(new TestToken(type));
-        }
-        for (int type : secondTypeSequence) {
-            second.addToken(new TestToken(type));
-        }
+        assertEqualFilterResult(new GenericTokenFilter(first, second, options));
     }
 
-    @Disabled
+    @Test
+    void testSingleInsertionMiddle() {
+        var first = buildTokenList(new int[]{
+                1,4,8,2,6,2,1,9,3,5,1,9,6,3,4,4,2,1,
+                7,
+                6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7});
+        var second = buildTokenList(new int[]{
+                1,4,8,2,6,2,1,9,3,5,1,9,6,3,4,4,2,1,
+                6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7
+        });
+
+        assertEqualFilterResult(new GenericTokenFilter(first, second, options));
+    }
+
     @Test
     void testMultipleInsertions() {
-        var first = new TokenList();
-        var second = new TokenList();
-
-        setupMultiInsertionTokenList(first, second);
-
-        var filter = new GenericTokenFilter(first, second, options);
-        filter.filter();
-
-        first = filter.getFirst();
-        second = filter.getSecond();
-        assertIterableEquals(first.allTokens(), second.allTokens());
-    }
-
-    private void setupMultiInsertionTokenList(TokenList first, TokenList second){
-        int[] firstTypeSequence = {
+        var first = buildTokenList(new int[]{
                 1,4,8,2,6,2,1,9,3,
-
-                5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,3,3,7,6,5,7,7,7
-        };
-        int[] secondTypeSequence = {
+                5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,
+                3,3,7,6,5,7,7,7
+        });
+        var second = buildTokenList(new int[] {
                 1,4,8,2,6,2,1,9,3,
                 1,4,
                 5,1,9,6,3,4,4,2,1,6,1,6,4,2,3,1,1,7,9,8,8,5,7,5,4,4,2,1,1,5,
-                1,
+                8,
                 3,3,7,6,5,7,7,7
-        };
+        });
 
-        for (int type : firstTypeSequence) {
-            first.addToken(new TestToken(type));
+        assertEqualFilterResult(new GenericTokenFilter(first, second, options));
+    }
+
+
+    private TokenList buildTokenList(int[] types) {
+        var tokenList = new TokenList();
+        for (int type : types) {
+            tokenList.addToken(new TestToken(type));
         }
-        for (int type : secondTypeSequence) {
-            second.addToken(new TestToken(type));
-        }
+        return tokenList;
+    }
+
+    private void assertEqualFilterResult(GenericTokenFilter filter) {
+        filter.filter();
+        assertIterableEquals(filter.getFirst().allTokens(), filter.getSecond().allTokens());
     }
 
     static class TestToken extends Token {
