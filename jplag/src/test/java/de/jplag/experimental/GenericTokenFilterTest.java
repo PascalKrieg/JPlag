@@ -5,6 +5,7 @@ import de.jplag.Token;
 import de.jplag.TokenList;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,29 @@ public class GenericTokenFilterTest extends TestBase {
         });
 
         assertEqualFilterResult(new GenericTokenFilter(first, second, options));
+    }
+
+    @Test
+    void testTooCloseInsertions() {
+        var first = buildTokenList(new int[] {
+                1,2,2,3,6,7,3,9,9,3,8,5,5,4,6,1,2,3,9,6,2,5,1,4,
+                8,1,9,2,
+                5,5,1,7,5,2,7,1,7,9,6,2,6,9,2,4,7,8,1,8,5,8,9,3,5,6,2,5,3,7,7,3,7,1,6,3,8,9,2,8}
+        );
+
+        var second = buildTokenList(new int[] {
+                1,2,2,3,6,7,3,9,9,3,8,5,5,4,6,1,2,3,9,6,2,5,1,4,
+                1,6,
+                8,1,9,2,
+                8,
+                5,5,1,7,5,2,7,1,7,9,6,2,6,9,2,4,7,8,1,8,5,8,9,3,5,6,2,5,3,7,7,3,7,1,6,3,8,9,2,8}
+        );
+
+        var localOptions = new ExperimentalOptions(14, 3, 1, 1);
+        localOptions.setGenericWindowPadding(5);
+        var filter = new GenericTokenFilter(first, second, localOptions);
+        filter.filter();
+        assertNotEquals(filter.getFirst().size(), filter.getSecond().size());
     }
 
 

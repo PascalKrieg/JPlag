@@ -79,7 +79,8 @@ public class JPlagOptions {
 
     private final FrontendOptions frontendOptions;
 
-    private final ExperimentalOptions experimentalOptions;
+    private ExperimentalOptions experimentalOptions;
+
 
     private boolean useGenericTokenFiltering = false;
 
@@ -299,6 +300,10 @@ public class JPlagOptions {
 
     public ExperimentalOptions getExperimentalOptions() {
         return experimentalOptions;
+    }
+
+    public void setExperimentalOptions(ExperimentalOptions experimentalOptions) {
+        this.experimentalOptions = experimentalOptions;
     }
 
     /**
