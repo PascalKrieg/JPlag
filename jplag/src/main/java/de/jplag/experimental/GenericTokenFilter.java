@@ -83,10 +83,6 @@ public class GenericTokenFilter {
             return;
         }
 
-        if (firstList.get(firstWindowStart).getType() == firstList.get(firstWindowStart + 1).getType()) {
-            return;
-        }
-
         // delete tokens in the first list
         for (int i = 0, j = 0;
              j < options.getGenericWindowLength() + deletionLength
@@ -99,7 +95,14 @@ public class GenericTokenFilter {
                 continue;
             }
 
-            if (i == 0 || i > options.getGenericWindowLength() - options.getGenericMaxInsertionLength()) {
+            // don't delete tokens at the start or end of a window
+            // if two windows are slightly offset for the same type sequence, the start would always be deleted, e.g.
+            // A B C D E
+            //   B C D E or
+            // A b a C D E
+            //     A C D E
+            // where lower case letters represent deleted tokens
+            if (i < options.getGenericMaxInsertionLength() || i > options.getGenericWindowLength() - options.getGenericMaxInsertionLength()) {
                 return;
             }
 
@@ -129,10 +132,9 @@ public class GenericTokenFilter {
             }
         }
 
-        // Mark all tokens as already mapped
-
         if (deletionWasAlreadyFound) {
-            printDeletionInfo(firstList, firstWindowStart, secondList, secondWindowStart, deletionStart, deletionLength);
+            // enable when debugging failing edge cases to see the windows and which tokens are deleted
+            //printDeletionInfo(firstList, firstWindowStart, secondList, secondWindowStart, deletionStart, deletionLength);
             for (int i = 0; i < deletionLength; i++) {
                 // Don't iterate. Always remove at deletion start because the rest of the list moves forward on every deletion
                 firstList.remove(deletionStart);
@@ -161,7 +163,7 @@ public class GenericTokenFilter {
         sb = new StringBuilder();
         for (int i = secondWindowStart; i < secondWindowStart + options.getGenericWindowLength() && i < secondList.size(); i++) {
             if (i == secondWindowStart + deletionOffset) {
-                sb.append("X ".repeat(deletionLength));
+                sb.append("_ ".repeat(deletionLength));
             }
             sb.append(secondList.get(i)).append(" ");
         }
