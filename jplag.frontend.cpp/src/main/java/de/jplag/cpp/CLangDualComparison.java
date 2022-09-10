@@ -47,9 +47,9 @@ public class CLangDualComparison implements DualComparisonStrategy {
     }
 
     /**
-     * Iterate over all Asse
-     * @param assemblyFiles
-     * @return
+     * Iterate over all Assembly files and populate the list of suspicious tuples.
+     * @param assemblyFiles The
+     * @return True, if no IO Errors occurred, False otherwise
      */
     private boolean compareAllAssemblyFiles(File[] assemblyFiles) {
         for (int i = 0; i < assemblyFiles.length - 1; i++) {
@@ -106,6 +106,7 @@ public class CLangDualComparison implements DualComparisonStrategy {
         var submissionFiles = rootDirectory.listFiles();
 
         if (submissionFiles == null) {
+            // Can also indicate an IO Exception
             throw new IllegalArgumentException();
         }
 
@@ -157,8 +158,8 @@ public class CLangDualComparison implements DualComparisonStrategy {
      * @return True, if the ratio of identical lines is above {@link CLangDualComparison#IDENTICAL_LINES_THRESHOLD}
      */
     private boolean areStringsSimilar(String first, String second) {
-        var firstLines = first.split("\n");
-        var secondLines = second.split("\n");
+        var firstLines = first.split(System.lineSeparator());
+        var secondLines = second.split(System.lineSeparator());
         int identicalLines = 0;
         for (int i = 0; i < firstLines.length && i < secondLines.length; i++) {
             if (firstLines[i].equals(secondLines[i])) {

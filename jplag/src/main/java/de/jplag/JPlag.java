@@ -99,7 +99,7 @@ public class JPlag {
 
         result.setClusteringResult(ClusteringFactory.getClusterings(result.getComparisons(), options.getClusteringOptions()));
 
-        if (options.getFrontendOptions().useDualComparison()) {
+        if (options.getFrontendOptions().isDualComparisonEnabled()) {
             var dualComparison = options.getFrontendOptions().getDualComparisonStrategy();
 
             var successful = dualComparison.runComparison(options.getSubmissionDirectories());
@@ -129,7 +129,8 @@ public class JPlag {
             Constructor<?> constructor;
             Object[] constructorParams;
             try {
-                constructor = Class.forName(languageOption.getClassPath()).getConstructor(ErrorConsumer.class, FrontendOptions.class);
+                constructor = Class.forName(languageOption.getClassPath())
+                        .getConstructor(ErrorConsumer.class, FrontendOptions.class);
                 constructorParams = new Object[]{errorCollector, this.options.getFrontendOptions()};
                 logger.info("got constructor with FrontendOptions");
             } catch (NoSuchMethodException e) {

@@ -128,7 +128,7 @@ public class GreedyStringTiling {
         TokenList first = firstSubmission.getTokenList();
         TokenList second = secondSubmission.getTokenList();
 
-        if (options.useGenericFiltering()) {
+        if (options.isGenericFilteringEnabled()) {
             GenericTokenFilter tokenFilter = new GenericTokenFilter(first, second, options.getExperimentalOptions());
             tokenFilter.filter();
 

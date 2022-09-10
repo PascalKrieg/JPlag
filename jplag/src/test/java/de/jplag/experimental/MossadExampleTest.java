@@ -14,7 +14,7 @@ public class MossadExampleTest extends TestBase {
         var result = runJPlag("experimental/mossad_example", jPlagOptions -> {
             jPlagOptions.setLanguageOption(LanguageOption.C_CPP);
             jPlagOptions.setExperimentalOptions(new ExperimentalOptions(12, 3, 1, 1));
-            jPlagOptions.setUseGenericTokenFiltering(true);
+            jPlagOptions.setGenericFilteringEnabled(true);
         });
 
         var baseline = runJPlag("experimental/mossad_example", jPlagOptions -> {

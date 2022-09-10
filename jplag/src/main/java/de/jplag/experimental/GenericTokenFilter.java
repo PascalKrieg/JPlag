@@ -106,7 +106,7 @@ public class GenericTokenFilter {
                 return;
             }
 
-            // if there already was a mismatching section in this window, start next window at the end of the first mismatch
+            // if there already was a mismatching section in this window, start next window
             if (deletionWasAlreadyFound) {
                 return;
             }

@@ -4,36 +4,36 @@ package de.jplag;
  * Contains flags that enable experimental features in the C/C++ frontend.
  */
 public class FrontendOptions {
-    private boolean useBasicFiltering = false;
-    private boolean useSourceAnalysis = false;
+    private boolean basicFilteringEnabled = false;
+    private boolean sourceAnalysisEnabled = false;
 
-    private boolean useDualComparison = false;
+    private boolean dualComparisonEnabled = false;
     private DualComparisonStrategy dualComparisonStrategy;
 
-    public boolean useBasicFiltering() {
-        return useBasicFiltering;
+    public boolean isBasicFilteringEnabled() {
+        return basicFilteringEnabled;
     }
 
-    public void setUseBasicFiltering(boolean useBasicFiltering) {
-        this.useBasicFiltering = useBasicFiltering;
-    }
-
-
-    public boolean useSourceAnalysis() {
-        return useSourceAnalysis;
-    }
-
-    public void setUseSourceAnalysis(boolean useSourceAnalysis) {
-        this.useSourceAnalysis = useSourceAnalysis;
+    public void setBasicFilteringEnabled(boolean basicFilteringEnabled) {
+        this.basicFilteringEnabled = basicFilteringEnabled;
     }
 
 
-    public boolean useDualComparison() {
-        return useDualComparison;
+    public boolean isSourceAnalysisEnabled() {
+        return sourceAnalysisEnabled;
     }
 
-    public void setUseDualComparison(boolean useDualComparison) {
-        this.useDualComparison = useDualComparison;
+    public void setSourceAnalysisEnabled(boolean sourceAnalysisEnabled) {
+        this.sourceAnalysisEnabled = sourceAnalysisEnabled;
+    }
+
+
+    public boolean isDualComparisonEnabled() {
+        return dualComparisonEnabled;
+    }
+
+    public void setDualComparisonEnabled(boolean dualComparisonEnabled) {
+        this.dualComparisonEnabled = dualComparisonEnabled;
     }
 
     public DualComparisonStrategy getDualComparisonStrategy() {

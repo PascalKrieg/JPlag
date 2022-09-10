@@ -128,9 +128,9 @@ public class CLI {
                 () -> logger.warn("Unknown comparison mode, using default mode!"));
 
         options.setBasicFiltering(SIMPLE_FILTERING.getFrom(namespace));
-        options.setSourceAnalysis(SOURCE_CODE_ANALYSIS.getFrom(namespace));
-        options.setUseGenericTokenFiltering(GENERIC_TOKEN_FILTERING.getFrom(namespace));
-        options.setDualComparison(COMPILED_DUAL_COMPARISON.getFrom(namespace));
+        options.setSourceAnalysisEnabled(SOURCE_CODE_ANALYSIS.getFrom(namespace));
+        options.setGenericFilteringEnabled(GENERIC_TOKEN_FILTERING.getFrom(namespace));
+        options.setDualComparisonEnabled(COMPILED_DUAL_COMPARISON.getFrom(namespace));
 
         ClusteringOptions.Builder clusteringBuilder = new ClusteringOptions.Builder();
         Optional.ofNullable((Boolean) CLUSTER_ENABLE.getFrom(namespace)).ifPresent(clusteringBuilder::enabled);

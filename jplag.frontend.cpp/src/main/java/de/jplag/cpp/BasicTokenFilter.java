@@ -1,6 +1,7 @@
 package de.jplag.cpp;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Contains a basic algorithm for detecting tokens contained in unreachable code.
@@ -14,14 +15,14 @@ public class BasicTokenFilter {
     public static void applyTo(List<CPPToken> tokenList) {
         TokenFilterState stateMachine = TokenFilterState.DEFAULT;
 
-        for (int i = 0; i < tokenList.size() - 1; i++) {
-            var tokenType = tokenList.get(i).getType();
+        ListIterator<CPPToken> iterator = tokenList.listIterator();
+        while (iterator.hasNext()) {
+            var tokenType = iterator.next().getType();
 
             stateMachine = stateMachine.nextState(tokenType);
 
             if (stateMachine.shouldTokenBeDeleted()) {
-                tokenList.remove(i);
-                i--;
+                iterator.remove();
             }
         }
     }

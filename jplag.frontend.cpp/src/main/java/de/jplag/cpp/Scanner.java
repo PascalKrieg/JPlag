@@ -21,9 +21,7 @@ public class Scanner extends AbstractParser {
      * @param errorConsumer is the consumer for any occurring errors.
      */
     public Scanner(ErrorConsumer errorConsumer) {
-        super(errorConsumer);
-        sourceAnalysis = new SourceAnalysis();
-        this.options = new FrontendOptions();
+        this(errorConsumer, new FrontendOptions());
     }
 
     /**
@@ -40,7 +38,7 @@ public class Scanner extends AbstractParser {
     public TokenList scan(File directory, String[] files) {
         tokenList = new LinkedList<>();
 
-        if (options.useSourceAnalysis()) {
+        if (options.isSourceAnalysisEnabled()) {
             sourceAnalysis.findUnusedVariableLines(directory, files);
         }
 
@@ -54,7 +52,7 @@ public class Scanner extends AbstractParser {
             tokenList.add(new CPPToken(CPPTokenConstants.FILE_END, currentFile));
         }
 
-        if (options.useBasicFiltering()) {
+        if (options.isBasicFilteringEnabled()) {
             BasicTokenFilter.applyTo(tokenList);
         }
 
@@ -69,7 +67,7 @@ public class Scanner extends AbstractParser {
     public void add(int type, Token token) {
         int length = token.endColumn - token.beginColumn + 1;
 
-        if (options.useSourceAnalysis() && sourceAnalysis.isTokenIgnored(token, currentFile)) {
+        if (options.isSourceAnalysisEnabled() && sourceAnalysis.isTokenIgnored(token, currentFile)) {
             return;
         }
 

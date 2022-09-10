@@ -14,6 +14,14 @@ public class SourceAnalysis {
     public static final String COMPILE_COMMAND = "gcc -Wall -fsyntax-only %s";
     private Map<String, List<Integer>> linesToDelete = new HashMap<>();
 
+    /**
+     * Tells the caller if a token is located in a line containing an unused variable.
+     * This usually indicates that the token belongs to a declaration of an unused variable.
+     * An edge case is multiple variable declarations in a single line, e.g. 'int a, b;' where a is used an b is unused.
+     * @param token The token that will be checked
+     * @param file The file the token was scanned in
+     * @return True, if the token should not be added to a TokenList, false if it should
+     */
     public boolean isTokenIgnored(Token token, String file) {
         if (linesToDelete.containsKey(file)) {
             var ignoredLineNumbers = linesToDelete.get(file);
@@ -22,16 +30,22 @@ public class SourceAnalysis {
         return false;
     }
 
+    /**
+     *
+     * @param directory Root directory of submission files
+     * @param files
+     */
     public void findUnusedVariableLines(File directory, String[] files) {
         linesToDelete = new HashMap<>();
 
         var isSingleFile = files.length == 1 && files[0].equals("");
 
         try {
-            Runtime rt = Runtime.getRuntime();
-            Process gcc = rt.exec(COMPILE_COMMAND.formatted(directory.getAbsolutePath()));
+            Runtime runtime = Runtime.getRuntime();
+            Process gcc = runtime.exec(COMPILE_COMMAND.formatted(directory.getAbsolutePath()));
             gcc.waitFor();
 
+            // gcc prints compiler warnings to the error stream, not the standard stream
             BufferedReader stdError = new BufferedReader(new InputStreamReader(gcc.getErrorStream()));
 
             String line;

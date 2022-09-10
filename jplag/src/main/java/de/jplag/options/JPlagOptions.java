@@ -82,7 +82,7 @@ public class JPlagOptions {
     private ExperimentalOptions experimentalOptions;
 
 
-    private boolean useGenericTokenFiltering = false;
+    private boolean genericFilteringEnabled = false;
 
     /**
      * Name of the file that contains the names of files to exclude from comparison.
@@ -262,24 +262,24 @@ public class JPlagOptions {
     }
 
     public void setBasicFiltering(Boolean value) {
-        this.frontendOptions.setUseBasicFiltering(value);
+        this.frontendOptions.setBasicFilteringEnabled(value);
     }
 
-    public void setSourceAnalysis(Boolean value) {
-        this.frontendOptions.setUseSourceAnalysis(value);
+    public void setSourceAnalysisEnabled(Boolean value) {
+        this.frontendOptions.setSourceAnalysisEnabled(value);
     }
 
-    public void setDualComparison(Boolean value) {
-        this.frontendOptions.setUseDualComparison(value);
+    public void setDualComparisonEnabled(Boolean value) {
+        this.frontendOptions.setDualComparisonEnabled(value);
     }
 
 
-    public boolean useGenericFiltering() {
-        return useGenericTokenFiltering;
+    public boolean isGenericFilteringEnabled() {
+        return genericFilteringEnabled;
     }
 
-    public void setUseGenericTokenFiltering(Boolean useGenericTokenFiltering) {
-        this.useGenericTokenFiltering = useGenericTokenFiltering;
+    public void setGenericFilteringEnabled(Boolean useGenericTokenFiltering) {
+        this.genericFilteringEnabled = useGenericTokenFiltering;
     }
 
     public void setGenericWindowLength(Integer value) {
